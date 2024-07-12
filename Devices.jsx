@@ -2,11 +2,20 @@ import { useCallback, useEffect } from 'react';
 import {
   View,
   TouchableOpacity,
+  ActivityIndicator,
   FlatList,
   Text,
   Modal,
   StyleSheet
 } from 'react-native';
+
+function Empty() {
+  return (
+    <View style={styles.noWrapper}>
+      <ActivityIndicator size={300} color='#c10030' />
+    </View>
+  );
+}
 
 function Device({ item, connectToDevice, close }) {
   const connect = useCallback(() => {
@@ -50,14 +59,13 @@ function Devices({ visible, permissionsEnabled, devices, connectToDevice, close 
               contentContainerStyle={styles.list}
               data={devices}
               renderItem={renderItem}
+              ListEmptyComponent={() => <Empty />}
             />
           </>
         ) : (
-          <>
-            <View style={styles.noWrapper}>
-              <Text style={styles.noTitle}>Предоставьте приложению необходимые разрешения</Text>
-            </View>
-          </>
+          <View style={styles.noWrapper}>
+            <Text style={styles.noTitle}>Предоставьте приложению необходимые разрешения</Text>
+          </View>
         )}
       </View>
    </Modal>
@@ -106,7 +114,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginHorizontal: 20
-  },
+  }
 });
 
 export default Devices;

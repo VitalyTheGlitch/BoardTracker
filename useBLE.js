@@ -76,6 +76,8 @@ function useBLE() {
     devices.findIndex((device) => newDevice.id === device.id) == -1;
 
   const scanDevices = () => {
+    setDevices([]);
+
     bleManager.startDeviceScan(null, null, (e, device) => {
       if (e) console.log(e);
 
@@ -102,8 +104,10 @@ function useBLE() {
       startStream(connectedDevice);
 
       Toast.show({ text1: 'Успешно подключено к ' + device.name + '!' });
-    } catch (e) {
+    } catch (e) {  
       console.log(e);
+
+      setTimeout(() => Toast.show({ type: 'error', text1: 'Ошибка подключения!' }), 100);
     }
   };
 
@@ -118,11 +122,13 @@ function useBLE() {
 
   const onDataUpdate = (e, c) => {
     if (e) {
+      console.log(e);
+
       Toast.show({ type: 'error', text1: 'Отключено!' });
 
       return -1;
     } else if (!c?.value) {
-      console.log('No data');
+      Toast.show({ type: 'error', text1: 'Нет данных!' });
 
       return -1;
     }
