@@ -134,14 +134,14 @@ function useBLE() {
     }
 
     const rawData = base64.decode(c.value);
-    const [temperature, capacity, voltage] = rawData.slice(13).split(',');
-    const rawTime = rawData.slice(0, 12);
-    const year = rawTime.slice(0, 4);
-    const month = rawTime.slice(4, 6);
-    const day = rawTime.slice(6, 8);
+    const [temperature, capacity, voltage] = rawData.slice(11).split(',');
+    const rawTime = rawData.slice(0, 10);
+    const year = rawTime.slice(0, 2);
+    const month = rawTime.slice(2, 4);
+    const day = rawTime.slice(4, 6);
+    const hour = rawTime.slice(6, 8);
     const minute = rawTime.slice(8, 10);
-    const second = rawTime.slice(10, 12);
-    const time = minute + ':' + second + '\n' + day + '.' + month + '.' + year;
+    const time = day + '/' + month + '.' + year + '\n' + hour + ':' minute;
     const data = { time, temperature, voltage, capacity };
 
     setData(data);
