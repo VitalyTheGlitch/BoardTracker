@@ -141,7 +141,7 @@ function useBLE() {
     const day = rawTime.slice(4, 6);
     const hour = rawTime.slice(6, 8);
     const minute = rawTime.slice(8, 10);
-    const time = day + '/' + month + '.' + year + '\n' + hour + ':' minute;
+    const time = day + '/' + month + '.' + year + '\n' + hour + ':' + minute;
     const data = { time, temperature, voltage, capacity };
 
     setData(data);
