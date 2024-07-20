@@ -9,8 +9,8 @@ import {
 } from 'react-native';
 import Toast from 'react-native-toast-message';
 import useBLE from './useBLE';
-import Devices from './Devices';
-import Display from './Display';
+import Devices from './components/Devices';
+import Display from './components/Display';
 
 function App() {
   const {
@@ -92,10 +92,10 @@ const styles = StyleSheet.create({
   },
   button: {
     height: 50,
-    backgroundColor: '#c10030',
+    backgroundColor: '#53bfbd',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 10,
+    borderRadius: 20,
     marginHorizontal: 20,
     marginBottom: 5
   },

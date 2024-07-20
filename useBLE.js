@@ -107,7 +107,7 @@ function useBLE() {
     } catch (e) {  
       console.log(e);
 
-      setTimeout(() => Toast.show({ type: 'error', text1: 'Ошибка подключения!' }), 100);
+      setTimeout(() => Toast.show({ type: 'info', text1: 'Ошибка подключения!' }), 100);
     }
   };
 
@@ -124,25 +124,44 @@ function useBLE() {
     if (e) {
       console.log(e);
 
-      Toast.show({ type: 'error', text1: 'Отключено!' });
+      Toast.show({ type: 'info', text1: 'Отключено!' });
 
       return -1;
     } else if (!c?.value) {
-      Toast.show({ type: 'error', text1: 'Нет данных!' });
+      Toast.show({ type: 'info', text1: 'Нет данных!' });
 
       return -1;
     }
 
     const rawData = base64.decode(c.value);
-    const [temperature, capacity, voltage] = rawData.slice(11).split(',');
-    const rawTime = rawData.slice(0, 10);
-    const year = rawTime.slice(0, 2);
-    const month = rawTime.slice(2, 4);
-    const day = rawTime.slice(4, 6);
-    const hour = rawTime.slice(6, 8);
-    const minute = rawTime.slice(8, 10);
-    const time = day + '/' + month + '.' + year + '\n' + hour + ':' + minute;
-    const data = { time, temperature, voltage, capacity };
+
+    const [
+      totalVolt,
+      capacity,
+      current,
+      voltMin,
+      voltMax,
+      tempC,
+      cycle
+    ] = rawData.split(',');
+
+    const voltDiff = Number(Math.abs(voltMax - voltMin).toFixed(2));
+    const tempF = Number((9 / 5 * tempC + 32).toFixed(2));
+
+    const singleData = [];
+
+    const data = {
+      totalVolt,
+      capacity,
+      tempC,
+      tempF,
+      voltMin,
+      voltMax,
+      voltDiff,
+      current,
+      cycle,
+      singleData
+    };
 
     setData(data);
   };

@@ -11,18 +11,18 @@
   "dependencies": {
     "@config-plugins/react-native-ble-plx": "^7.0.0",
     "@expo/metro-runtime": "~3.2.1",
+    "@types/react": "~18.2.79",
     "eas-cli": "^10.1.1",
     "expo": "^51.0.18",
     "expo-dev-client": "~4.0.19",
     "expo-device": "~6.0.2",
     "expo-status-bar": "~1.12.1",
+    "react": "18.2.0",
     "react-native": "0.74.3",
     "react-native-base64": "^0.2.1",
     "react-native-ble-plx": "^3.2.1",
     "react-native-toast-message": "^2.2.0",
-    "react": "18.2.0",
-    "typescript": "~5.3.3",
-    "@types/react": "~18.2.79"
+    "typescript": "~5.3.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

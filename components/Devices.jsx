@@ -2,20 +2,12 @@ import { useCallback, useEffect } from 'react';
 import {
   View,
   TouchableOpacity,
-  ActivityIndicator,
   FlatList,
   Text,
   Modal,
   StyleSheet
 } from 'react-native';
-
-function Empty() {
-  return (
-    <View style={styles.noWrapper}>
-      <ActivityIndicator size={300} color='#c10030' />
-    </View>
-  );
-}
+import Empty from './Empty';
 
 function Device({ item, connectToDevice, close }) {
   const connect = useCallback(() => {
@@ -35,15 +27,13 @@ function Device({ item, connectToDevice, close }) {
 };
 
 function Devices({ visible, permissionsEnabled, devices, connectToDevice, close }) {
-  const renderItem = ({ item }) => {
-    return (
-      <Device
-        item={item}
-        connectToDevice={connectToDevice}
-        close={close}
-      />
-    );
-  }
+  const renderDevice = ({ item }) => (
+    <Device
+      item={item}
+      connectToDevice={connectToDevice}
+      close={close}
+    />
+  );
 
   return (
     <Modal
@@ -58,15 +48,14 @@ function Devices({ visible, permissionsEnabled, devices, connectToDevice, close 
             <FlatList
               contentContainerStyle={styles.list}
               data={devices}
-              renderItem={renderItem}
+              keyExtractor={({ id }) => id.toString()}
+              renderItem={renderDevice}
               ListEmptyComponent={() => <Empty />}
             />
           </>
-        ) : (
-          <View style={styles.noWrapper}>
-            <Text style={styles.noTitle}>Предоставьте приложению необходимые разрешения</Text>
-          </View>
-        )}
+        ) :
+          <Empty permissions={true} />
+        }
       </View>
    </Modal>
   );
@@ -91,7 +80,7 @@ const styles = StyleSheet.create({
   },
   button: {
     height: 50,
-    backgroundColor: '#c10030',
+    backgroundColor: '#53bfbd',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
@@ -102,18 +91,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#fff'
-  },
-  noWrapper: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  noTitle: {
-    color: '#c10030',
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginHorizontal: 20
   }
 });
 

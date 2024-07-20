@@ -31,7 +31,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#fe1348"
+        "backgroundColor": "#53bfbd"
       },
       "permissions": [
         "android.permission.BLUETOOTH",
