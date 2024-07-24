@@ -18,20 +18,22 @@ function Display({ device, data }) {
       <View style={styles.topHeader}>
         <Text style={styles.topHeaderText}>{device.name}</Text>
       </View>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Общая информация</Text>
+      <View style={styles.display}>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>Общая информация</Text>
+        </View>
+        <Indicators data={data} />
+        {/*<View style={styles.header}>
+          <Text style={styles.headerText}>Напряжения на ячейках</Text>
+        </View>
+        <FlatList
+          contentContainerStyle={styles.list}
+          numColumns={4}
+          data={data.singleData}
+          keyExtractor={({ id }) => id.toString()}
+          renderItem={renderBattery}
+        />*/}
       </View>
-      <Indicators data={data} />
-      {/*<View style={styles.header}>
-        <Text style={styles.headerText}>Напряжения на ячейках</Text>
-      </View>
-      <FlatList
-        contentContainerStyle={styles.list}
-        numColumns={4}
-        data={data.singleData}
-        keyExtractor={({ id }) => id.toString()}
-        renderItem={renderBattery}
-      />*/}
     </View>
   );
 }
@@ -42,7 +44,10 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: '#111',
     paddingHorizontal: 10,
-    paddingVertical: 20,
+    paddingVertical: 20
+  },
+  display: {
+    flex: 1,
     justifyContent: 'center'
   },
   list: {

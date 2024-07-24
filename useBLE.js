@@ -138,14 +138,14 @@ function useBLE() {
     const [
       totalVolt,
       capacity,
-      current,
+      tempC,
       voltMin,
       voltMax,
-      tempC,
-      cycle
+      current,
+      cycle,
+      voltDiff
     ] = rawData.split(',');
 
-    const voltDiff = Number(Math.abs(voltMax - voltMin).toFixed(2));
     const tempF = Number((9 / 5 * tempC + 32).toFixed(2));
 
     const singleData = [];

@@ -14,6 +14,7 @@
     "@types/react": "~18.2.79",
     "eas-cli": "^10.1.1",
     "expo": "^51.0.18",
+    "expo-camera": "~15.0.14",
     "expo-dev-client": "~4.0.19",
     "expo-device": "~6.0.2",
     "expo-status-bar": "~1.12.1",

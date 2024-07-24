@@ -10,6 +10,7 @@ import {
 import Toast from 'react-native-toast-message';
 import useBLE from './useBLE';
 import Devices from './components/Devices';
+import Scanner from './components/Scanner';
 import Display from './components/Display';
 
 function App() {
@@ -20,11 +21,13 @@ function App() {
     disconnectFromDevice,
     devices,
     connectedDevice,
-    data
+    data: bluetoothData
   } = useBLE();
 
   const [permissionsEnabled, setPermissionsEnabled] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [scanData, setScanData] = useState(null);
+  const [devicesVisible, setDevicesVisible] = useState(false);
+  const [scannerVisible, setScannerVisible] = useState(false);
 
   const scan = async () => {
     const permissionsEnabled = await requestPermissions();
@@ -37,20 +40,20 @@ function App() {
   const open = async () => {
     scan();
 
-    setModalVisible(true);
+    setDevicesVisible(true);
   };
 
   return (
     <View style={styles.container}>
-      <View style={styles.startWrapper}>
-        {connectedDevice ? (
-          <Display device={connectedDevice} data={data} />
+      {connectedDevice ? (
+        <Display device={connectedDevice} data={bluetoothData} />
         ) : (
+        <View style={styles.startWrapper}>
           <Text style={styles.startTitle}>
             Нажмите кнопку ниже и выберите устройство
           </Text>
-        )}
-      </View>
+        </View>
+      )}
       <TouchableOpacity
         style={styles.button}
         onPress={connectedDevice ? disconnectFromDevice : open}
@@ -60,11 +63,17 @@ function App() {
         </Text>
       </TouchableOpacity>
       <Devices
-        visible={modalVisible}
+        visible={devicesVisible}
         permissionsEnabled={permissionsEnabled}
         devices={devices}
         connectToDevice={connectToDevice}
-        close={() => setModalVisible(false)}
+        close={() => setDevicesVisible(false)}
+      />
+      <Scanner
+        visible={scannerVisible}
+        data={scanData}
+        setData={setScanData}
+        close={() => setScannerVisible(false)}
       />
       <Toast visibilityTime={3000} />
     </View>

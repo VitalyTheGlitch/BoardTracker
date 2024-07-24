@@ -16,6 +16,12 @@
           "modes": ["peripheral", "central"],
           "bluetoothAlwaysPermission": "Allow $(PRODUCT_NAME) to connect to bluetooth devices"
         }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access camera"
+        }
       ]
     ],
     "splash": {
@@ -38,7 +44,8 @@
         "android.permission.BLUETOOTH_ADMIN",
         "android.permission.BLUETOOTH_SCAN",
         "android.permission.BLUETOOTH_CONNECT",
-        "android.permission.ACCESS_FINE_LOCATION"
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.CAMERA"
       ],
       "package": "com.boardtracker",
       "versionCode": 1
