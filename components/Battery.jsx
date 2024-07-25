@@ -47,10 +47,10 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   batteryBody: {
+    position: 'relative',
     width: 60,
     height: 100,
     backgroundColor: '#000',
-    position: 'relative',
     borderWidth: 4,
     borderStyle: 'solid',
     borderColor: '#333',

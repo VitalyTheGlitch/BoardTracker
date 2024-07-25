@@ -25,9 +25,9 @@ function App() {
   } = useBLE();
 
   const [permissionsEnabled, setPermissionsEnabled] = useState(false);
-  const [scanData, setScanData] = useState(null);
   const [devicesVisible, setDevicesVisible] = useState(false);
   const [scannerVisible, setScannerVisible] = useState(false);
+  const [factoryCapacity, setFactoryCapacity] = useState(null);
 
   const scan = async () => {
     const permissionsEnabled = await requestPermissions();
@@ -40,17 +40,21 @@ function App() {
   const open = async () => {
     scan();
 
-    setDevicesVisible(true);
+    setScannerVisible(true);
   };
 
   return (
     <View style={styles.container}>
       {connectedDevice ? (
-        <Display device={connectedDevice} data={bluetoothData} />
+        <Display
+          device={connectedDevice}
+          data={bluetoothData}
+          factoryCapacity={factoryCapacity}
+        />
         ) : (
         <View style={styles.startWrapper}>
           <Text style={styles.startTitle}>
-            Нажмите кнопку ниже и выберите устройство
+            Нажмите кнопку ниже, чтобы начать
           </Text>
         </View>
       )}
@@ -71,8 +75,9 @@ function App() {
       />
       <Scanner
         visible={scannerVisible}
-        data={scanData}
-        setData={setScanData}
+        devices={devices}
+        connectToDevice={connectToDevice}
+        setFactoryCapacity={setFactoryCapacity}
         close={() => setScannerVisible(false)}
       />
       <Toast visibilityTime={3000} />

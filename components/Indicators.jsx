@@ -13,7 +13,8 @@ const icons = {
   voltMin: require('../assets/icons/voltMin.png'),
   voltDiff: require('../assets/icons/voltDiff.png'),
   temp: require('../assets/icons/temp.png'),
-  cycle: require('../assets/icons/cycle.png')
+  cycle: require('../assets/icons/cycle.png'),
+  factoryCapacity: require('../assets/icons/factoryCapacity.png')
 };
 
 function Indicator({ icon, label, data, color='#000' }) {
@@ -30,7 +31,7 @@ function Indicator({ icon, label, data, color='#000' }) {
   );
 }
 
-function Indicators({ data }) {
+function Indicators({ data, factoryCapacity }) {
   const tempColor = '#000';
 
   return (
@@ -48,7 +49,7 @@ function Indicators({ data }) {
       <View style={styles.row}>
         <Indicator icon={icons.temp} label='°C' data={data.tempC} color={tempColor} />
         <Indicator icon={icons.cycle} label='Цикл' data={data.cycle} />
-        <Indicator icon={icons.temp} label='°F' data={data.tempF} color={tempColor} />
+        {factoryCapacity && <Indicator icon={icons.factoryCapacity} label='Н. емк.' data={factoryCapacity} color={tempColor} />}
       </View>
     </View>
   );

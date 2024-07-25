@@ -103,11 +103,16 @@ function useBLE() {
 
       startStream(connectedDevice);
 
-      Toast.show({ text1: 'Успешно подключено к ' + device.name + '!' });
+      Toast.show({
+        text1: 'Успешно подключено к ' + device.name + '!'
+      });
     } catch (e) {  
       console.log(e);
 
-      setTimeout(() => Toast.show({ type: 'info', text1: 'Ошибка подключения!' }), 100);
+      setTimeout(() => Toast.show({
+        type: 'info',
+        text1: 'Ошибка подключения!'
+      }), 100);
     }
   };
 
@@ -124,11 +129,17 @@ function useBLE() {
     if (e) {
       console.log(e);
 
-      Toast.show({ type: 'info', text1: 'Отключено!' });
+      Toast.show({
+        type: 'info',
+        text1: 'Отключено!'
+      });
 
       return -1;
     } else if (!c?.value) {
-      Toast.show({ type: 'info', text1: 'Нет данных!' });
+      Toast.show({
+        type: 'info',
+        text1: 'Нет данных!'
+      });
 
       return -1;
     }
@@ -146,15 +157,12 @@ function useBLE() {
       voltDiff
     ] = rawData.split(',');
 
-    const tempF = Number((9 / 5 * tempC + 32).toFixed(2));
-
     const singleData = [];
 
     const data = {
       totalVolt,
       capacity,
       tempC,
-      tempF,
       voltMin,
       voltMax,
       voltDiff,

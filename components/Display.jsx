@@ -8,7 +8,7 @@ import Indicators from './Indicators';
 import Battery from './Battery';
 import Empty from './Empty';
 
-function Display({ device, data }) {
+function Display({ device, data, factoryCapacity }) {
   if (!data) return <Empty />;
 
   const renderBattery = ({ item }) => <Battery id={item.id} voltage={item.voltage} />;
@@ -22,7 +22,7 @@ function Display({ device, data }) {
         <View style={styles.header}>
           <Text style={styles.headerText}>Общая информация</Text>
         </View>
-        <Indicators data={data} />
+        <Indicators data={data} factoryCapacity={factoryCapacity} />
         {/*<View style={styles.header}>
           <Text style={styles.headerText}>Напряжения на ячейках</Text>
         </View>
