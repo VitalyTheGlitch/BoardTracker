@@ -1,38 +1,66 @@
+import { useState, useRef } from 'react';
 import {
   View,
   FlatList,
   Text,
+  Animated,
   StyleSheet
 } from 'react-native';
 import Indicators from './Indicators';
-import Battery from './Battery';
+import Batteries from './Batteries';
 import Empty from './Empty';
 
 function Display({ device, data, factoryCapacity }) {
+  const scrollX = useRef(new Animated.Value(0)).current;
+  const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
+
   if (!data) return <Empty />;
 
-  const renderBattery = ({ item }) => <Battery id={item.id} voltage={item.voltage} />;
+  const renderMonitors = ({ item }) => {
+    if (item == 0) return (
+      <View style={styles.display}>
+          <View style={styles.header}>
+            <Text style={styles.headerText}>Общая информация</Text>
+          </View>
+          <Indicators data={data} factoryCapacity={factoryCapacity} />
+      </View>
+    );
+
+    if (item == 1) return (
+      <View style={styles.display}>
+          <View style={styles.header}>
+            <Text style={styles.headerText}>Напряжения на ячейках</Text>
+          </View>
+          <Batteries data={data.singleData} />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
       <View style={styles.topHeader}>
         <Text style={styles.topHeaderText}>{device.name}</Text>
       </View>
-      <View style={styles.display}>
-        <View style={styles.header}>
-          <Text style={styles.headerText}>Общая информация</Text>
-        </View>
-        <Indicators data={data} factoryCapacity={factoryCapacity} />
-        {/*<View style={styles.header}>
-          <Text style={styles.headerText}>Напряжения на ячейках</Text>
-        </View>
+      <View style={{ flex: 3}}>
         <FlatList
-          contentContainerStyle={styles.list}
-          numColumns={4}
-          data={data.singleData}
-          keyExtractor={({ id }) => id.toString()}
-          renderItem={renderBattery}
-        />*/}
+          data={[0, 1]}
+          keyExtractor={(id) => id.toString()}
+          renderItem={renderMonitors}
+          horizontal
+          pagingEnabled
+          bounces={false}
+          onScroll={Animated.event([{
+            nativeEvent: {
+              contentOffset: {
+                x: scrollX
+              }
+            }
+          }], {
+            useNativeDriver: false
+          })}
+          scrollEventThrottle={32}
+          viewabilityConfig={viewConfig}
+        />
       </View>
     </View>
   );
@@ -41,28 +69,18 @@ function Display({ device, data, factoryCapacity }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: '100%',
     backgroundColor: '#111',
     paddingHorizontal: 10,
     paddingVertical: 20
   },
   display: {
-    flex: 1,
-    justifyContent: 'center'
-  },
-  list: {
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    gap: 10,
-    marginTop: 10,
-    marginHorizontal: -20,
-    paddingBottom: 20
+    justifyContent: 'center',
+    paddingHorizontal: 10
   },
   header: {
     borderRadius: 2,
-    paddingVertical: 10,
     marginBottom: 5,
+    paddingVertical: 10,
     elevation: 2
   },
   headerText: {

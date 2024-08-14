@@ -157,7 +157,24 @@ function useBLE() {
       voltDiff
     ] = rawData.split(',');
 
-    const singleData = [];
+    const singleData = [
+      {'id': 0, 'voltage': Math.floor(Math.random() * 100) + 1},
+      {'id': 1, 'voltage': Math.floor(Math.random() * 100) + 1},
+      {'id': 2, 'voltage': Math.floor(Math.random() * 100) + 1},
+      {'id': 3, 'voltage': Math.floor(Math.random() * 100) + 1},
+      {'id': 4, 'voltage': Math.floor(Math.random() * 100) + 1},
+      {'id': 5, 'voltage': Math.floor(Math.random() * 100) + 1},
+      {'id': 6, 'voltage': Math.floor(Math.random() * 100) + 1},
+      {'id': 7, 'voltage': Math.floor(Math.random() * 100) + 1},
+      {'id': 8, 'voltage': Math.floor(Math.random() * 100) + 1},
+      {'id': 9, 'voltage': Math.floor(Math.random() * 100) + 1},
+      {'id': 10, 'voltage': Math.floor(Math.random() * 100) + 1},
+      {'id': 11, 'voltage': Math.floor(Math.random() * 100) + 1},
+      {'id': 12, 'voltage': Math.floor(Math.random() * 100) + 1},
+      {'id': 13, 'voltage': Math.floor(Math.random() * 100) + 1},
+      {'id': 14, 'voltage': Math.floor(Math.random() * 100) + 1},
+      {'id': 15, 'voltage': Math.floor(Math.random() * 100) + 1}
+    ];
 
     const data = {
       totalVolt,

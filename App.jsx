@@ -40,7 +40,7 @@ function App() {
   const open = async () => {
     scan();
 
-    setScannerVisible(true);
+    setDevicesVisible(true);
   };
 
   return (

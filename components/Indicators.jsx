@@ -37,7 +37,7 @@ function Indicators({ data, factoryCapacity }) {
   return (
     <View style={styles.container}>
       <View style={styles.row}>
-        <Indicator icon={icons.capacity} label='Емкость' data={data.capacity} />
+        <Indicator icon={icons.capacity} label='Емк.' data={data.capacity} />
         <Indicator icon={icons.totalVolt} label='Напр.' data={data.totalVolt} />
         <Indicator icon={icons.current} label='Ток' data={data.current} />
       </View>
@@ -57,14 +57,17 @@ function Indicators({ data, factoryCapacity }) {
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 5
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   row: {
     flexDirection: 'row',
+    width: 300,
     justifyContent: 'space-between',
     gap: 5,
     marginVertical: 5,
-    marginHorizontal: -20
+    marginHorizontal: -10
   },
   indicator: {
     flex: 1,
