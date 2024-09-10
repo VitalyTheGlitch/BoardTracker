@@ -3,35 +3,46 @@ import {
   View,
   FlatList,
   Text,
+  Image,
   Animated,
-  StyleSheet
+  StyleSheet,
+  useWindowDimensions
 } from 'react-native';
 import Indicators from './Indicators';
 import Batteries from './Batteries';
 import Empty from './Empty';
 
-function Display({ device, data, factoryCapacity }) {
+const icons = {
+  bluetooth: require('../assets/icons/bluetooth.png')
+};
+
+function Display({ device, mode, data, factoryVoltage, factoryCapacity }) {
   const scrollX = useRef(new Animated.Value(0)).current;
   const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
+  const width = useWindowDimensions().width / 1.15;
 
   if (!data) return <Empty />;
 
   const renderMonitors = ({ item }) => {
-    if (item == 0) return (
-      <View style={styles.display}>
+    if (!item) return (
+      <View style={ width }>
+        <View style={{ alignItems: 'center' }}>
           <View style={styles.header}>
             <Text style={styles.headerText}>Общая информация</Text>
           </View>
-          <Indicators data={data} factoryCapacity={factoryCapacity} />
+        </View>
+        <Indicators data={data} factoryCapacity={factoryCapacity} />
       </View>
     );
 
-    if (item == 1) return (
-      <View style={styles.display}>
+    return (
+      <View style={ width }>
+        <View style={{ alignItems: 'center' }}>
           <View style={styles.header}>
             <Text style={styles.headerText}>Напряжения на ячейках</Text>
           </View>
-          <Batteries data={data.singleData} />
+        </View>
+        <Batteries data={data.singleData} />
       </View>
     );
   }
@@ -39,9 +50,10 @@ function Display({ device, data, factoryCapacity }) {
   return (
     <View style={styles.container}>
       <View style={styles.topHeader}>
-        <Text style={styles.topHeaderText}>{device.name}</Text>
+        <Text style={styles.topHeaderText}>{device}</Text>
+        {!!mode && <Image style={styles.icon} source={icons.bluetooth} />}
       </View>
-      <View style={{ flex: 3}}>
+      <View style={{ flex: 3 }}>
         <FlatList
           data={[0, 1]}
           keyExtractor={(id) => id.toString()}
@@ -62,6 +74,10 @@ function Display({ device, data, factoryCapacity }) {
           viewabilityConfig={viewConfig}
         />
       </View>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Общая информация</Text>
+      </View>
+      <Indicators data={data} factoryCapacity={factoryCapacity} />
     </View>
   );
 }
@@ -70,14 +86,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#111',
-    paddingHorizontal: 10,
     paddingVertical: 20
   },
-  display: {
-    justifyContent: 'center',
-    paddingHorizontal: 10
+  icon: {
+    width: 24,
+    height: 24,
+    marginLeft: 5
   },
   header: {
+    width: '80%',
     borderRadius: 2,
     marginBottom: 5,
     paddingVertical: 10,
@@ -90,10 +107,12 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   topHeader: {
+    flexDirection: 'row',
     backgroundColor: '#53bfbd',
     borderRadius: 5,
-    paddingVertical: 10,
-    marginBottom: 10
+    justifyContent: 'center',
+    marginBottom: 10,
+    paddingVertical: 10
   },
   topHeaderText: {
     fontSize: 16,

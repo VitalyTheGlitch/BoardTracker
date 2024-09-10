@@ -83,13 +83,13 @@ function useBLE() {
 
       setDevices((prevState) => {
         if (checkDevice(prevState, device)) return [...prevState, device];
-        
+
         return prevState;
       });
     });
-  }
+  };
 
-  const connectToDevice = async (device) => {
+  const connectToDevice = async (device, factoryCapacity) => {
     try {
       await bleManager.connectToDevice(device.id);
 
@@ -101,18 +101,20 @@ function useBLE() {
 
       bleManager.stopDeviceScan();
 
-      startStream(connectedDevice);
+      connectedDevice.monitorCharacteristicForService(
+        SERVICE_UUID,
+        SERVICE_CHARACTERISTIC,
+        (e, c) => onDataUpdate(e, c, factoryCapacity)
+      );
 
-      Toast.show({
-        text1: 'Успешно подключено к ' + device.name + '!'
-      });
+      Toast.show({ text1: 'Успешно подключено к ' + device.name + '!' });
     } catch (e) {  
       console.log(e);
 
       setTimeout(() => Toast.show({
         type: 'info',
         text1: 'Ошибка подключения!'
-      }), 100);
+      }), 500);
     }
   };
 
@@ -125,59 +127,35 @@ function useBLE() {
     }
   };
 
-  const onDataUpdate = (e, c) => {
-    if (e) {
+  const onDataUpdate = (e, c, factoryCapacity) => {
+    if (e || !c?.value) {
       console.log(e);
 
-      Toast.show({
+      setTimeout(() => Toast.show({
         type: 'info',
         text1: 'Отключено!'
-      });
+      }), 500);
 
-      return -1;
-    } else if (!c?.value) {
-      Toast.show({
-        type: 'info',
-        text1: 'Нет данных!'
-      });
+      disconnectFromDevice();
 
       return -1;
     }
 
-    const rawData = base64.decode(c.value);
+    const res = base64.decode(c.value);
+    const rawData = res.split(',');
+    const [totalVolt, capacity, tempC, current, accumulated] = rawData.slice(0, 5);
+    const rawSingleData = rawData.slice(5)[0].split('|');
+    const voltMin = Math.min(...rawSingleData) / 100;
+    const voltMax = Math.max(...rawSingleData) / 100;
+    const voltDiff = (Math.round((voltMax - voltMin) * 100) / 100).toFixed(2);
+    const cycle = Math.round(accumulated / factoryCapacity);
+    const singleData = [];
 
-    const [
-      totalVolt,
-      capacity,
-      tempC,
-      voltMin,
-      voltMax,
-      current,
-      cycle,
-      voltDiff
-    ] = rawData.split(',');
-
-    const singleData = [
-      {'id': 0, 'voltage': Math.floor(Math.random() * 100) + 1},
-      {'id': 1, 'voltage': Math.floor(Math.random() * 100) + 1},
-      {'id': 2, 'voltage': Math.floor(Math.random() * 100) + 1},
-      {'id': 3, 'voltage': Math.floor(Math.random() * 100) + 1},
-      {'id': 4, 'voltage': Math.floor(Math.random() * 100) + 1},
-      {'id': 5, 'voltage': Math.floor(Math.random() * 100) + 1},
-      {'id': 6, 'voltage': Math.floor(Math.random() * 100) + 1},
-      {'id': 7, 'voltage': Math.floor(Math.random() * 100) + 1},
-      {'id': 8, 'voltage': Math.floor(Math.random() * 100) + 1},
-      {'id': 9, 'voltage': Math.floor(Math.random() * 100) + 1},
-      {'id': 10, 'voltage': Math.floor(Math.random() * 100) + 1},
-      {'id': 11, 'voltage': Math.floor(Math.random() * 100) + 1},
-      {'id': 12, 'voltage': Math.floor(Math.random() * 100) + 1},
-      {'id': 13, 'voltage': Math.floor(Math.random() * 100) + 1},
-      {'id': 14, 'voltage': Math.floor(Math.random() * 100) + 1},
-      {'id': 15, 'voltage': Math.floor(Math.random() * 100) + 1}
-    ];
+    for (let i = 0; i < rawSingleData.length; ++i)
+      singleData.push({ id: i, voltage: rawSingleData[i] / 100 });
 
     const data = {
-      totalVolt,
+      totalVolt: totalVolt / 100,
       capacity,
       tempC,
       voltMin,
@@ -191,26 +169,14 @@ function useBLE() {
     setData(data);
   };
 
-  const startStream = async (device) => {
-    if (device) {
-      device.monitorCharacteristicForService(
-        SERVICE_UUID,
-        SERVICE_CHARACTERISTIC,
-        onDataUpdate
-      );
-    }
-
-    else console.log('No device connected');
-  };
-
   return {
     requestPermissions,
     scanDevices,
+    devices,
+    data,
     connectToDevice,
     disconnectFromDevice,
-    devices,
-    connectedDevice,
-    data
+    connectedDevice
   };
 }
 

@@ -2,7 +2,7 @@ import {
   View,
   Text,
   Image,
-  StyleSheet
+  StyleSheet,
 } from 'react-native';
 
 const icons = {
@@ -32,8 +32,6 @@ function Indicator({ icon, label, data, color='#000' }) {
 }
 
 function Indicators({ data, factoryCapacity }) {
-  const tempColor = '#000';
-
   return (
     <View style={styles.container}>
       <View style={styles.row}>
@@ -47,9 +45,9 @@ function Indicators({ data, factoryCapacity }) {
         <Indicator icon={icons.voltDiff} label='Разн.' data={data.voltDiff} />
       </View>
       <View style={styles.row}>
-        <Indicator icon={icons.temp} label='°C' data={data.tempC} color={tempColor} />
+        <Indicator icon={icons.temp} label='°C' data={data.tempC} />
         <Indicator icon={icons.cycle} label='Цикл' data={data.cycle} />
-        {factoryCapacity && <Indicator icon={icons.factoryCapacity} label='Н. емк.' data={factoryCapacity} color={tempColor} />}
+        {factoryCapacity && <Indicator icon={icons.factoryCapacity} label='Н. емк.' data={factoryCapacity} />}
       </View>
     </View>
   );
@@ -58,16 +56,12 @@ function Indicators({ data, factoryCapacity }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: 'center'
   },
   row: {
     flexDirection: 'row',
-    width: 300,
-    justifyContent: 'space-between',
     gap: 5,
-    marginVertical: 5,
-    marginHorizontal: -10
+    marginVertical: 5
   },
   indicator: {
     flex: 1,
@@ -78,13 +72,14 @@ const styles = StyleSheet.create({
   },
   iconWrapper: {
     flexDirection: 'column',
-    width: 48,
-    height: 60,
+    width: 50,
+    height: 50,
     justifyContent: 'center',
     alignItems: 'center'
   },
   rightWrapper: {
     flex: 1,
+    width: 50,
     justifyContent: 'flex-start'
   },
   icon: {
@@ -92,7 +87,7 @@ const styles = StyleSheet.create({
     height: 24
   },
   label: {
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   data: {
     fontWeight: '500'

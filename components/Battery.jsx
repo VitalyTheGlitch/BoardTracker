@@ -5,13 +5,18 @@ import {
 } from 'react-native';
 
 function Battery({ id, voltage }) {
-  const height = voltage + '%';
+  if (voltage < 2.5) voltage = 2.5;
+
+  else if (voltage > 3.75) voltage = 3.75;
+
+  const percentage = voltage ? ((voltage - 2.5) * 100) / 1.25 : 0;
+  const height = percentage + '%';
   const batteryStyle = [styles.battery, id % 4 == 0 && { marginLeft: 50 }];
   const chargeStyle = [styles.charge, { height }];
 
-  if (voltage <= 20) chargeStyle.push(styles.chargeLow);
+  if (percentage <= 20) chargeStyle.push(styles.chargeLow);
 
-  else if (voltage <= 50) chargeStyle.push(styles.chargeMedium);
+  else if (percentage <= 50) chargeStyle.push(styles.chargeMedium);
 
   return (
     <View style={batteryStyle}>

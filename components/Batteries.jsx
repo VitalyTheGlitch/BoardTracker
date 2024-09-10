@@ -29,11 +29,10 @@ const styles = StyleSheet.create({
   },
   list: {
     flexDirection: 'column',
+    minWidth: 300,
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
-    gap: 10,
     marginTop: 10,
-    marginHorizontal: -20,
     paddingBottom: 20
   }
 });
