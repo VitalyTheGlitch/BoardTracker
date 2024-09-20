@@ -2,8 +2,8 @@ import { useState, useCallback, useEffect } from 'react';
 import {
   View,
   Text,
-  Modal,
-  StyleSheet
+  ImageBackground,
+  TouchableOpacity
 } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { CameraView, Camera } from 'expo-camera';
@@ -14,30 +14,33 @@ const reFactoryCapacity = /\d+(?=AH)/g;
 const reNumber = /(?<=AH)\d{4}/g;
 
 function Scanner({
-  visible,
   bluetoothPermissionsEnabled,
   connected,
   devices,
   setMode,
   connectionLink,
-  connectBLE,
-  connectWAN,
+  setConnectionLink,
+  setDeviceCode,
+  setBatteryNumber,
   setFactoryVoltage,
   setFactoryCapacity,
-  close
+  connectBLE,
+  connectWAN,
+  height
 }) {
   const [cameraPermissionsEnabled, setCameraPermissionsEnabled] = useState(false);
+  const [title, setTitle] = useState(0);
 
   const connect = (device, mode, factoryCapacity) => {
     if (mode) connectBLE(device, factoryCapacity);
 
     else connectWAN(device);
-
-    close();
   };
 
   const handle = ({ data }) => {
-    if (connected) return;
+    if ((connected || connectionLink) && !((connectionLink ?? '').includes('lionsystems:'))) return;
+
+    setConnectionLink(data);
 
     const params = {};
     let match;
@@ -57,6 +60,8 @@ function Scanner({
         text1: 'Недействительный QR-код!'
       });
 
+      setTitle(1);
+
       return;
     }
 
@@ -71,6 +76,8 @@ function Scanner({
           text1: 'Устройство не обнаружено!'
         });
 
+        setTitle(1);
+
         return;
       }
     } else device = number;
@@ -78,10 +85,17 @@ function Scanner({
     setMode(mode);
 
     if (device) {
+      setDeviceCode(battery.split('AH')[0]);
+      setBatteryNumber(number.toString().padStart(4, '0'));
       setFactoryVoltage(factoryVoltage);
       setFactoryCapacity(factoryCapacity);
       connect(device, mode, factoryCapacity);
     }
+  }
+
+  const reset = () => {
+    setConnectionLink(null);
+    setTitle(0);
   }
 
   useEffect(() => {
@@ -100,76 +114,107 @@ function Scanner({
     if (devices.length && connectionLink) handle({ data: connectionLink });
   }, [devices, connectionLink]);
 
+  const titles = [
+    'Отсканируйте QR-код вашей АКБ',
+    'Ошибка сканирования\nПопробуйте снова'
+  ];
+
   return (
-    <Modal
-      animationType='slide'
-      transparent={false}
-      visible={visible}
-    >
-      <View style={styles.container}>
-        {bluetoothPermissionsEnabled && cameraPermissionsEnabled ? (
-          <>
-            <Text style={styles.title}>Наведите камеру на QR-код устройства</Text>
-            <View style={styles.wrapper}>
-              <View style={styles.cameraWrapper}>
-                <CameraView
-                  style={styles.camera}
-                  onBarcodeScanned={handle}
-                  barcodeScannerSettings={{
-                    barcodeTypes: ['qr']
-                  }}
-                />
-              </View>
-              <View style={styles.cameraAfter} />
+    <View>
+      {bluetoothPermissionsEnabled && cameraPermissionsEnabled ? (
+        <>
+          <View
+            style={{
+              height: height,
+              alignItems: 'center',
+              paddingHorizontal: 20
+            }}
+          >
+            <View style={{
+                width: '90%',
+                height: '50%',
+                backgroundColor: '#000',
+                borderWidth: 4,
+                borderRadius: 10
+            }}>
+              <CameraView
+                style={{
+                  width: '100%',
+                  height: '100%'
+                }}
+                onBarcodeScanned={handle}
+                barcodeScannerSettings={{
+                  barcodeTypes: ['qr']
+                }}
+              />
             </View>
-          </>
-        ) :
-          <Empty permissions={true} />
-        }
-      </View>
-      <Toast visibilityTime={3000} />
-   </Modal>
+            <View style={{
+              position: 'absolute',
+              width: '90%',
+              height: '50%',
+              borderWidth: 4,
+              borderRadius: 10,
+              borderStyle: 'solid',
+              borderColor: '#53bfbd'
+            }} />
+            <Text
+              style={{
+                width: 320,
+                height: 70,
+                justifyContent: 'center',
+                fontSize: 24,
+                fontWeight: '700',
+                color: '#4ec0c1',
+                textAlign: 'center',
+                marginTop: 30
+              }}
+            >
+              {titles[title]}
+            </Text>
+            <View
+              style={{
+                width: 320,
+                height: 60,
+                marginTop: 150
+              }}
+            >
+              <TouchableOpacity
+                style={{
+                  zIndex: 1
+                }}
+                onPress={reset}
+              >
+                <Text
+                  style={{
+                    fontSize: 24,
+                    fontWeight: '500',
+                    textAlign: 'center',
+                    color: '#4ec0c1',
+                    marginTop: 12
+                  }}
+                >
+                  Сканировать
+                </Text>
+              </TouchableOpacity>
+              <View
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  backgroundColor: '#0c1716',
+                  borderRadius: 10,
+                  borderWidth: 1,
+                  borderColor: '#4ec0c1',
+                  borderStyle: 'solid',
+                  position: 'absolute'
+                }}
+              />
+            </View>
+          </View>
+          <Toast visibilityTime={3000} />
+        </>
+      ) : <Empty permissions={true} />} 
+   </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#111'
-  },
-  wrapper: {
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  cameraWrapper: {
-    width: '80%',
-    height: '80%',
-    borderWidth: 4,
-    borderRadius: 10,
-    borderStyle: 'solid',
-    borderColor: '#53bfbd'
-  },
-  camera: {
-    width: '100%',
-    height: '100%'
-  },
-  cameraAfter: {
-    position: 'absolute',
-    width: '80%',
-    height: '80%',
-    borderWidth: 4,
-    borderRadius: 10,
-    borderStyle: 'solid',
-    borderColor: '#53bfbd'
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#fff',
-    textAlign: 'center',
-    marginTop: 50,
-    marginHorizontal: 20
-  }
-});
 
 export default Scanner;

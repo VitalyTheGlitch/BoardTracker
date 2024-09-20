@@ -19,6 +19,7 @@ function Empty({ permissions }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    height: 700,
     justifyContent: 'center',
     alignItems: 'center'
   },

@@ -93,7 +93,7 @@ function useBLE() {
     try {
       await bleManager.connectToDevice(device.id);
 
-      const connectedDevice = await bleManager.requestMTUForDevice(device.id, 30);
+      const connectedDevice = await bleManager.requestMTUForDevice(device.id, 128);
 
       setConnectedDevice(connectedDevice);
 
@@ -115,6 +115,8 @@ function useBLE() {
         type: 'info',
         text1: 'Ошибка подключения!'
       }), 500);
+
+      setConnectedDevice(null);
     }
   };
 
@@ -143,7 +145,7 @@ function useBLE() {
 
     const res = base64.decode(c.value);
     const rawData = res.split(',');
-    const [totalVolt, capacity, tempC, current, accumulated] = rawData.slice(0, 5);
+    const [totalVolt, capacity, temp, current, accumulated] = rawData.slice(0, 5);
     const rawSingleData = rawData.slice(5)[0].split('|');
     const voltMin = Math.min(...rawSingleData) / 100;
     const voltMax = Math.max(...rawSingleData) / 100;
@@ -157,7 +159,7 @@ function useBLE() {
     const data = {
       totalVolt: totalVolt / 100,
       capacity,
-      tempC,
+      temp,
       voltMin,
       voltMax,
       voltDiff,

@@ -1,97 +1,597 @@
 import {
   View,
   Text,
-  Image,
-  StyleSheet,
+  ImageBackground,
+  TouchableOpacity
 } from 'react-native';
 
-const icons = {
-  capacity: require('../assets/icons/capacity.png'),
-  totalVolt: require('../assets/icons/totalVolt.png'),
-  current: require('../assets/icons/current.png'),
-  voltMax: require('../assets/icons/voltMax.png'),
-  voltMin: require('../assets/icons/voltMin.png'),
-  voltDiff: require('../assets/icons/voltDiff.png'),
-  temp: require('../assets/icons/temp.png'),
-  cycle: require('../assets/icons/cycle.png'),
-  factoryCapacity: require('../assets/icons/factoryCapacity.png')
+const images = {
+  bg: require('../assets/images/bg.png'),
+  battery: require('../assets/images/battery.png'),
+  cycle: require('../assets/images/cycle.png')
 };
 
-function Indicator({ icon, label, data, color='#000' }) {
+function Indicators({ data, deviceCode, deviceNumber, factoryVoltage, factoryCapacity, disconnect, height }) {
   return (
-    <View style={styles.indicator}>
-      <View style={styles.iconWrapper}>
-        <Image style={styles.icon} source={icon} />
+    <View
+      style={{
+        height: height,
+        alignItems: 'center'
+      }}
+    >
+      <View
+        style={{
+          width: 300,
+          height: 40
+        }}
+      >
+        <Text
+          style={{
+            width: 300,
+            height: 30,
+            fontWeight: '700',
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: [{ translateY: -18 }, { translateX: -140 }]
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 24,
+              fontWeight: '700',
+              color: '#4ec0c1'
+            }}
+          >
+            АКБ&nbsp;&nbsp;&nbsp;
+          </Text>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: '700',
+              color: '#4ec0c1'
+            }}
+          >
+            №
+          </Text>
+          <Text
+            style={{
+              fontSize: 24,
+              fontWeight: '700',
+              color: '#4ec0c1'
+            }}
+          >
+            {deviceNumber}&nbsp;&nbsp;&nbsp;
+          </Text>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: '700',
+              color: '#366f6f'
+            }}
+          >
+            {deviceCode}
+          </Text>
+        </Text>
       </View>
-      <View style={styles.rightWrapper}>
-        <Text style={styles.label}>{label}</Text>
-        <Text style={[styles.data, { color }]}>{data}</Text>
+      <View
+        style={{
+          width: 320,
+          height: 190,
+          marginTop: 12
+        }}
+      >
+        <View
+          style={{
+            width: '100%',
+            height: '100%',
+            backgroundColor: '#0c1716',
+            borderRadius: 10,
+            position: 'absolute'
+          }}
+        />
+        <Text
+          style={{
+            width: 200,
+            height: 100,
+            fontWeight: '700',
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: [{ translateY: -75 }, { translateX: -140 }],
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 60,
+              fontWeight: '700',
+              color: '#30f5ef'
+            }}
+          >
+            {data.capacity}
+          </Text>
+          <Text
+            style={{
+              fontSize: 40,
+              fontWeight: '700',
+              color: '#30f5ef'
+            }}
+          >
+            %
+          </Text>
+        </Text>
+{/*        <ImageBackground
+          style={{
+            width: '45%',
+            height: '80%',
+            position: 'absolute',
+            top: '20%',
+            left: '67%'
+          }}
+          source={images.battery}
+        />*/}
+        <Text
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-start',
+            alignItems: 'flex-start',
+            fontSize: 120,
+            fontWeight: '700',
+            color: '#366f6f',
+            position: 'absolute',
+            top: 10,
+            right: 30
+          }}
+        >
+          C
+        </Text>
+        <Text
+          style={{
+            display: 'flex',
+            height: 60,
+            justifyContent: 'flex-start',
+            alignItems: 'flex-start',
+            fontSize: 48,
+            fontWeight: '700',
+            opacity: 0.6,
+            color: '#4ec0c1',
+            position: 'absolute',
+            top: '60%',
+            left: 25
+          }}
+        >
+          {factoryCapacity} Ач
+        </Text>
+      </View>
+      <View
+        style={{
+          width: 320,
+          height: 180,
+          marginTop: 15
+        }}
+      >
+        <View
+          style={{
+            width: '100%',
+            height: '100%',
+            backgroundColor: '#0c1716',
+            borderRadius: 10,
+            position: 'absolute'
+          }}
+        />
+        <Text
+          style={{
+            width: 200,
+            fontWeight: '700',
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: [{ translateY: -75 }, { translateX: -135 }]
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 60,
+              fontWeight: '700',
+              color: '#30f5ef'
+            }}
+          >
+            {data.totalVolt}
+          </Text>
+          <Text
+            style={{
+              fontSize: 30,
+              fontWeight: '700',
+              color: '#30f5ef'
+            }}
+          >
+            В
+          </Text>
+        </Text>
+        <Text
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-start',
+            alignItems: 'flex-start',
+            fontSize: 120,
+            fontWeight: '700',
+            color: '#366f6f',
+            position: 'absolute',
+            top: 10,
+            right: 25
+          }}
+        >
+          U
+        </Text>
+        <View
+          style={{
+            width: '16%',
+            height: '30%',
+            position: 'absolute',
+            top: '60%',
+            left: 26
+          }}
+        >
+          <Text
+            style={{
+              height: 15,
+              fontSize: 12,
+              fontWeight: '500',
+              opacity: 0.6,
+              color: '#4ec0c1',
+              marginTop: 5,
+              marginLeft: 10
+            }}
+          >
+            Мин
+          </Text>
+          <Text
+            style={{
+
+              fontSize: 16,
+              fontWeight: '500',
+              color: '#30f5ef',
+              marginTop: 2,
+              marginLeft: 10
+            }}
+          >
+            {data.voltMin}
+          </Text>
+          <View
+            style={{
+              width: '100%',
+              height: '100%',
+              borderRadius: 5,
+              borderWidth: 1,
+              borderColor: '#337c7c',
+              borderStyle: 'solid',
+              position: 'absolute'
+            }}
+          />
+        </View>
+        <View
+          style={{
+            width: '16%',
+            height: '30%',
+            position: 'absolute',
+            top: '60%',
+            left: '26%'
+          }}
+        >
+          <Text
+            style={{
+              height: 15,
+              fontSize: 12,
+              fontWeight: '500',
+              opacity: 0.6,
+              color: '#4ec0c1',
+              marginTop: 5,
+              marginLeft: 10
+            }}
+          >
+            Макс
+          </Text>
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: '500',
+              color: '#30f5ef',
+              marginTop: 2,
+              marginLeft: 10
+            }}
+          >
+            {data.voltMax}
+          </Text>
+          <View
+            style={{
+              width: '100%',
+              height: '100%',
+              borderRadius: 5,
+              borderWidth: 1,
+              borderColor: '#337c7c',
+              borderStyle: 'solid',
+              position: 'absolute'
+            }}
+          />
+        </View>
+        <View
+          style={{
+            width: '16%',
+            height: '30%',
+            position: 'absolute',
+            top: '60%',
+            left: '44%'
+          }}
+        >
+          <Text
+            style={{
+              height: 15,
+              fontSize: 12,
+              fontWeight: '500',
+              opacity: 0.6,
+              color: '#4ec0c1',
+              marginTop: 5,
+              marginLeft: 10
+            }}
+          >
+            Разн
+          </Text>
+          <Text
+            style={{
+              height: 20,
+              fontSize: 16,
+              fontWeight: '500',
+              color: '#30f5ef',
+              marginTop: 2,
+              marginLeft: 10
+            }}
+          >
+            {data.voltDiff}
+          </Text>
+          <View
+            style={{
+              width: '100%',
+              height: '100%',
+              borderRadius: 5,
+              borderWidth: 1,
+              borderColor: '#337c7c',
+              borderStyle: 'solid',
+              position: 'absolute'
+            }}
+          />
+        </View>
+      </View>
+      <View
+        style={{
+          width: 320,
+          height: 160,
+          marginTop: 8
+        }}
+      >
+        <View
+          style={{
+            width: 180,
+            height: 80,
+            position: 'absolute',
+            left: 140
+          }}
+        >
+          <Text
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-start',
+              alignItems: 'flex-start',
+              fontSize: 70,
+              fontWeight: '700',
+              color: '#366f6f',
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              zIndex: 1,
+              transform: [{ translateY: -50 }, { translateX: -75 }]
+            }}
+          >
+            t
+          </Text>
+          <View
+            style={{
+              width: '100%',
+              height: '85%',
+              backgroundColor: '#0c1716',
+              borderRadius: 10,
+              position: 'absolute',
+              top: '10%'
+            }}
+          />
+          <Text
+            style={{
+              width: 100,
+              height: 45,
+              fontWeight: '700',
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: [{ translateY: -25 }, { translateX: -12 }]
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 36,
+                fontWeight: '700',
+                color: '#30f5ef'
+              }}
+            >
+              {data.temp}
+            </Text>
+            <Text
+              style={{
+                fontSize: 32,
+                fontWeight: '700',
+                color: '#366f6f'
+              }}
+            >
+              °С
+            </Text>
+          </Text>
+        </View>
+        <View
+          style={{
+            width: 130,
+            height: 150,
+            position: 'absolute',
+            top: 7
+          }}
+        >
+          <Text
+            style={{
+              zIndex: 1,
+              marginTop: 75,
+              marginLeft: 20
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 36,
+                fontWeight: '700',
+                color: '#30f5ef'
+              }}
+            >
+              {data.current}
+            </Text>
+            <Text
+              style={{
+                fontSize: 24,
+                fontWeight: '700',
+                color: '#30f5ef'
+              }}
+            >
+              А
+            </Text>
+          </Text>
+          <View
+            style={{
+              width: '100%',
+              height: '100%',
+              backgroundColor: '#0c1716',
+              borderRadius: 10,
+              position: 'absolute'
+            }}
+          />
+          <Text
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-start',
+              alignItems: 'flex-start',
+              fontSize: 60,
+              fontWeight: '700',
+              color: '#366f6f',
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: [{ translateY: -70 }, { translateX: -40 }]
+            }}
+          >
+            I
+          </Text>
+        </View>
+        <View
+          style={{
+            width: 180,
+            height: 70,
+            position: 'absolute',
+            top: 85,
+            left: 140
+          }}
+        >
+          <View
+            style={{
+              width: '100%',
+              height: '100%',
+              backgroundColor: '#0c1716',
+              borderTopLeftRadius: 10,
+              borderTopRightRadius: 10,
+              borderBottomRightRadius: 10,
+              borderBottomLeftRadius: 10,
+              position: 'absolute'
+            }}
+          />
+          <Text
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-start',
+              alignItems: 'flex-start',
+              fontSize: 36,
+              fontWeight: '700',
+              color: '#30f5ef',
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: [{ translateY: -25 }, { translateX: -10 }]
+            }}
+          >
+            {data.cycle}
+          </Text>
+          <View
+            style={{
+              width: 36,
+              height: 36,
+              position: 'absolute',
+              top: 20,
+              left: 12
+            }}
+          >
+            <ImageBackground
+              style={{
+                width: '100%',
+                height: '100%',
+                position: 'absolute'
+              }}
+              source={images.cycle}
+            />
+          </View>
+        </View>
+      </View>
+      <View
+        style={{
+          width: 320,
+          height: 60,
+          marginTop: 15
+        }}
+      >
+        <TouchableOpacity
+          style={{
+            height: 30,
+            zIndex: 1
+          }}
+          onPress={disconnect}
+        >
+          <Text
+            style={{
+              height: 30,
+              fontSize: 24,
+              fontWeight: '500',
+              textAlign: 'center',
+              color: '#4ec0c1',
+              marginTop: 13
+            }}>
+            Отключить
+          </Text>
+        </TouchableOpacity>
+        <View
+          style={{
+            width: '100%',
+            height: '100%',
+            backgroundColor: '#0c1716',
+            borderRadius: 10,
+            borderWidth: 1,
+            borderColor: '#4ec0c1',
+            borderStyle: 'solid',
+            position: 'absolute'
+          }}
+        />
       </View>
     </View>
   );
 }
-
-function Indicators({ data, factoryCapacity }) {
-  return (
-    <View style={styles.container}>
-      <View style={styles.row}>
-        <Indicator icon={icons.capacity} label='Емк.' data={data.capacity} />
-        <Indicator icon={icons.totalVolt} label='Напр.' data={data.totalVolt} />
-        <Indicator icon={icons.current} label='Ток' data={data.current} />
-      </View>
-      <View style={styles.row}>
-        <Indicator icon={icons.voltMin} label='Мин.' data={data.voltMin} />
-        <Indicator icon={icons.voltMax} label='Макс.' data={data.voltMax} />
-        <Indicator icon={icons.voltDiff} label='Разн.' data={data.voltDiff} />
-      </View>
-      <View style={styles.row}>
-        <Indicator icon={icons.temp} label='°C' data={data.tempC} />
-        <Indicator icon={icons.cycle} label='Цикл' data={data.cycle} />
-        {factoryCapacity && <Indicator icon={icons.factoryCapacity} label='Н. емк.' data={factoryCapacity} />}
-      </View>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center'
-  },
-  row: {
-    flexDirection: 'row',
-    gap: 5,
-    marginVertical: 5
-  },
-  indicator: {
-    flex: 1,
-    flexDirection: 'row',
-    backgroundColor: '#53bfbd',
-    alignItems: 'center',
-    borderRadius: 10
-  },
-  iconWrapper: {
-    flexDirection: 'column',
-    width: 50,
-    height: 50,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  rightWrapper: {
-    flex: 1,
-    width: 50,
-    justifyContent: 'flex-start'
-  },
-  icon: {
-    width: 24,
-    height: 24
-  },
-  label: {
-    fontWeight: 'bold',
-  },
-  data: {
-    fontWeight: '500'
-  }
-});
 
 export default Indicators;

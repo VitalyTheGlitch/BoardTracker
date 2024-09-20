@@ -1,9 +1,9 @@
 {
   "expo": {
     "entryPoint": "./index.js",
-    "name": "Board Tracker",
-    "scheme": "board-tracker",
-    "slug": "board-tracker",
+    "name": "ЛИОНСИСТЕМС",
+    "scheme": "lionsystems",
+    "slug": "lionsystems",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -27,17 +27,17 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#111111"
+      "backgroundColor": "#274147"
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.boardtracker",
+      "bundleIdentifier": "com.lionsystems",
       "buildNumber": "1.0.0"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#53bfbd"
+        "backgroundColor": "#274147"
       },
       "permissions": [
         "android.permission.BLUETOOTH",
@@ -47,7 +47,7 @@
         "android.permission.ACCESS_FINE_LOCATION",
         "android.permission.CAMERA"
       ],
-      "package": "com.boardtracker",
+      "package": "com.lionsystems",
       "versionCode": 1
     },
     "web": {
@@ -55,7 +55,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "5f475717-efc4-40cf-ba3a-d1a5d2ae1beb"
+        "projectId": "0e984ed7-06d5-45a9-b41c-7cf8b15a6d9c"
       }
     }
   }

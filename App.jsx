@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
-  View,
-  TouchableOpacity,
+  SafeAreaView,
+  ScrollView,
   Text,
-  StyleSheet,
+  ImageBackground,
   Linking,
-  PermissionsAndroid,
-  Platform
+  useWindowDimensions
 } from 'react-native';
 import Toast from 'react-native-toast-message';
 import useBLE from './useBLE';
@@ -25,20 +24,23 @@ function App() {
   } = useBLE();
 
   const [bluetoothPermissionsEnabled, setBluetoothPermissionsEnabled] = useState(false);
-  const [scannerVisible, setScannerVisible] = useState(false);
   const [connectedDeviceWAN, setConnectedDeviceWAN] = useState(null);
   const [connectionLink, setConnectionLink] = useState(null);
+  const [deviceCode, setDeviceCode] = useState(null);
+  const [deviceNumber, setBatteryNumber] = useState(null);
   const [factoryVoltage, setFactoryVoltage] = useState(null);
   const [factoryCapacity, setFactoryCapacity] = useState(null);
   const [streamURL, setStreamURL] = useState(null);
   const [dataWAN, setDataWAN] = useState(null);
   const [mode, setMode] = useState(1);
 
+  const { width: windowWidth, height: windowHeight } = useWindowDimensions();
+
   const streamWAN = (url) => {
     fetch(url).then(res => res.text().then(res => {
       try {
         const rawData = res.split(',');
-        const [totalVolt, capacity, tempC, current, accumulated] = rawData.slice(0, 5);
+        const [totalVolt, capacity, temp, current, accumulated] = rawData.slice(0, 5);
         const rawSingleData = rawData.slice(5)[0].split('|');
         const voltMin = Math.min(...rawSingleData) / 100;
         const voltMax = Math.max(...rawSingleData) / 100;
@@ -52,7 +54,7 @@ function App() {
         const data = {
           totalVolt: totalVolt / 100,
           capacity,
-          tempC,
+          temp,
           voltMin,
           voltMax,
           voltDiff,
@@ -100,32 +102,20 @@ function App() {
     if (bluetoothPermissionsEnabled) scanDevices();
   };
 
-  const open = (url) => {
-    if (url) setConnectionLink(url);
-
-    setScannerVisible(true);
-  };
-
-  const close = () => {
-    setConnectionLink(null);
-    setScannerVisible(false);
-  };
-
   const disconnect = () => {
+    setConnectionLink(null);
     disconnectBLE();
     disconnectWAN();
-
-    open(null);
   };
 
   useEffect(() => {
     setConnectionLink(null);
 
-    Linking.addEventListener('url', e => open(e.url));
+    Linking.addEventListener('url', e => setConnectionLink(e.url));
 
     Linking.getInitialURL().then(url => {
       scan();
-      open(url);
+      setConnectionLink(url);
     }).catch(console.warn);
 
     return () => Linking.removeAllListeners('url');
@@ -141,83 +131,60 @@ function App() {
 
   const connectedDevice = mode ? connectedDeviceBLE?.name : connectedDeviceWAN;
   const data = mode ? dataBLE : dataWAN;
+  const height = windowHeight * ((windowWidth <= 320) ? 1.2 : 1);
+  const margin = (windowWidth <= 320) ? 20 : 50;
+  const scale = (windowWidth <= 320) ? 0.9 : 1;
 
   return (
-    <View style={styles.container}>
-      {connectedDevice ? (
-        <Display
-          device={connectedDevice}
-          mode={mode}
-          data={data}
-          factoryVoltage={setFactoryVoltage}
-          factoryCapacity={factoryCapacity}
-        />
-        ) : (
-        <View style={styles.startWrapper}>
-          <Text style={styles.startTitle}>
-            Нажмите кнопку ниже, чтобы начать
-          </Text>
-        </View>
-      )}
-      <TouchableOpacity
-        style={styles.button}
-        onPress={connectedDevice ? disconnect : () => open(null)}
-      >
-        <Text style={styles.buttonText}>
-          {connectedDevice ? 'Отключить' : 'Начать'}
-        </Text>
-      </TouchableOpacity>
-      <Scanner
-        visible={scannerVisible}
-        bluetoothPermissionsEnabled={bluetoothPermissionsEnabled}
-        connected={!!connectedDevice}
-        devices={devices}
-        setMode={setMode}
-        connectionLink={connectionLink}
-        connectBLE={connectBLE}
-        connectWAN={connectWAN}
-        setFactoryVoltage={setFactoryVoltage}
-        setFactoryCapacity={setFactoryCapacity}
-        close={close}
-      />
-      {!scannerVisible && <Toast visibilityTime={3000} />}
-    </View>
+    <ImageBackground
+      style={{
+        width: windowWidth,
+        height: windowHeight + 50,
+        position: 'absolute',
+        zIndex: -1
+      }}
+      source={require('./assets/images/bg.png')}
+      resizeMode='cover'
+    >
+      <ScrollView>
+        <SafeAreaView style={{
+          transform: [{ scale }],
+          marginTop: margin
+        }}>
+          {connectedDevice ? (
+            <>
+              <Display
+                data={data}
+                deviceCode={deviceCode}
+                deviceNumber={deviceNumber}
+                factoryVoltage={factoryVoltage}
+                factoryCapacity={factoryCapacity}
+                disconnect={disconnect}
+                height={height}
+              />
+              <Toast visibilityTime={3000} />
+            </>
+          ) : (
+            <Scanner
+              bluetoothPermissionsEnabled={bluetoothPermissionsEnabled}
+              connected={!!connectedDevice}
+              devices={devices}
+              setMode={setMode}
+              connectionLink={connectionLink}
+              setConnectionLink={setConnectionLink}
+              setDeviceCode={setDeviceCode}
+              setBatteryNumber={setBatteryNumber}
+              setFactoryVoltage={setFactoryVoltage}
+              setFactoryCapacity={setFactoryCapacity}
+              connectBLE={connectBLE}
+              connectWAN={connectWAN}
+              height={windowHeight}
+            />
+          )}
+        </SafeAreaView>
+      </ScrollView>
+    </ImageBackground>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#111',
-    paddingHorizontal: 20,
-    paddingVertical: 25
-  },
-  startWrapper: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  startTitle: {
-    color: '#fff',
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginHorizontal: 20
-  },
-  button: {
-    height: 50,
-    backgroundColor: '#53bfbd',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 20,
-    marginHorizontal: 20,
-    marginBottom: 5
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 20,
-    fontWeight: 'bold'
-  }
-});
 
 export default App;

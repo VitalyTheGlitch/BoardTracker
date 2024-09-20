@@ -1,4 +1,4 @@
-* {
+* {s
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -7,7 +7,12 @@
 body {
     width: 100%;
     background: #000;
-    zoom: 150%;
+}
+
+body @media (orientation: landscape) {
+    body {
+        zoom: 150%;
+    }
 }
 
 a {
@@ -20,12 +25,12 @@ a {
     font-size: 1.6em;
     font-weight: 600;
     color: #fff;
-    margin-top: 10vh;
+    margin-top: 1em;
+    margin-bottom: 1.6em;
 }
 
 #google-play {
     margin-left: 1.6em;
-    margin-top: 1.6em;
 }
 
 #app-store {
@@ -35,7 +40,11 @@ a {
 }
 
 .container {
-    text-align: center;
+  position: absolute;
+  top: 33%;
+  width: 100%; 
+  text-align: center; 
+  margin: auto;
 }
 
 .button {
@@ -45,14 +54,13 @@ a {
     border: solid #fff 1px;
     border-radius: 5px;
     margin: auto;
-    margin-top: 5em;
 }
 
 .button img {
     float: left;
     width: 3.6em;
     margin-left: 1.2em;
-    margin-top: 1.5em;
+    margin-top: 1.2em;
 }
 
 .button h5 {
@@ -61,7 +69,7 @@ a {
     font-size: 1.6em;
     font-weight: 100;
     color: #fff;
-    margin-left: 0.9em;
+    margin-left: 1em;
     margin-top: 0.75em;
 }
 

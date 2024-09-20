@@ -2,17 +2,20 @@ const params = new URLSearchParams(location.search);
 const battery = params.get('battery');
 const mode = params.get('mode');
 
-const url = new URL('board-tracker:');
-url.pathname = '//connect/';
-url.searchParams.append('battery', battery);
-url.searchParams.append('mode', mode);
+const appURL = new URL('lionsystems:');
+appURL.pathname = '//connect/';
+appURL.searchParams.append('battery', battery);
+appURL.searchParams.append('mode', mode);
 
 document.getElementById('title').innerHTML = battery;
 
-const connect = () => {
+function connect() {
 	if (!battery) return;
 
-	const answer = confirm('Скачайте Board Tracker, чтобы подключиться к ' + battery + '!');
-
-	if (answer) window.open(url.toString(), '_blank');
+	try {
+		window.location = appURL;
+	} catch (e) {
+		if (e.toString().includes('NS_ERROR_UNKNOWN_PROTOCOL'))
+			console.log('App not detected');
+	}
 }
