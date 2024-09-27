@@ -4,19 +4,40 @@ import {
   StyleSheet
 } from 'react-native';
 
-function Cell({ id, voltage }) {
+function Cell({ id, voltage, capacity, main }) {
   if (voltage < 2.5) voltage = 2.5;
 
   else if (voltage > 3.75) voltage = 3.75;
 
-  const percentage = voltage ? ((voltage - 2.5) * 100) / 1.25 : 0;
+  if (capacity < 0) capacity = 0;
+
+  else if (capacity > 100) capacity = 100;
+
+  let percentage;
+
+  if (main) percentage = capacity ?? 0;
+
+  else percentage = voltage ? ((voltage - 2.5) * 100) / 1.25 : 0;
+
   const height = percentage + '%';
-  const batteryStyle = [styles.battery, id % 4 == 0 && { marginLeft: 50 }];
+  const scale = main ? 1 : 0.5;
+  const batteryStyle = [styles.battery, { transform: [{ scale }] }, id % 4 == 0 && { marginLeft: 50 }];
   const chargeStyle = [styles.charge, { height }];
+  const colors = {
+    high: '#c3feff',
+    medium: '#c1a74e',
+    low: '#c14e4e'
+  }
 
-  if (percentage <= 20) chargeStyle.push(styles.chargeLow);
+  let backgroundColor;
 
-  else if (percentage <= 50) chargeStyle.push(styles.chargeMedium);
+  if (percentage <= 20) backgroundColor = colors.low;
+
+  else if (percentage <= 50) backgroundColor = colors.medium;
+
+  else backgroundColor = colors.high;
+
+  chargeStyle.push({ backgroundColor });
 
   return (
     <View style={batteryStyle}>
@@ -34,59 +55,51 @@ function Cell({ id, voltage }) {
 const styles = StyleSheet.create({
   battery: {
     flexDirection: 'row',
-    width: 60,
-    height: 100,
+    width: 70,
+    height: 120,
     justifyContent: 'space-between',
     marginVertical: 5,
     marginHorizontal: 5
   },
   batteryHead: {
-    width: 20,
-    height: 10,
-    backgroundColor: '#000',
+    width: 30,
+    height: 0,
+    backgroundColor: '#366f6f',
     borderWidth: 4,
     borderStyle: 'solid',
-    borderColor: '#333',
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
+    borderColor: '#153535',
+    borderTopLeftRadius: 4,
+    borderTopRightRadius: 4,
     alignItems: 'center'
   },
   batteryBody: {
     position: 'relative',
-    width: 60,
-    height: 100,
-    backgroundColor: '#000',
-    borderWidth: 4,
+    width: 70,
+    height: 120,
+    backgroundColor: '#366f6f',
+    borderWidth: 1,
     borderStyle: 'solid',
-    borderColor: '#333',
-    borderRadius: 20,
+    borderColor: '#153535',
+    borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center'
   },
   batteryBodyAfter: {
     position: 'absolute',
     top: '50%',
-    width: 60,
-    height: 100,
-    borderWidth: 4,
-    borderRadius: 20,
+    width: 70,
+    height: 120,
+    borderWidth: 1,
+    borderRadius: 10,
     borderStyle: 'solid',
-    borderColor: '#333'
+    borderColor: '#153535'
   },
   charge: {
     position: 'absolute',
     bottom: 0,
     width: '100%',
     maxWidth: 'inherit',
-    borderRadius: 16,
-    backgroundColor: '#53bfbd'
-  },
-  chargeMedium: {
-    backgroundColor: '#decc1b'
-  },
-  chargeLow: {
-    width: '90%',
-    backgroundColor: '#bd1010'
+    borderRadius: 8
   },
   text: {
     zIndex: 1,

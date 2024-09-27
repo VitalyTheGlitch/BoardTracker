@@ -4,12 +4,7 @@ import {
   ImageBackground,
   TouchableOpacity
 } from 'react-native';
-
-const images = {
-  bg: require('../assets/images/bg.png'),
-  battery: require('../assets/images/battery.png'),
-  cycle: require('../assets/images/cycle.png')
-};
+import Cell from './Cell';
 
 function Indicators({ data, deviceCode, deviceNumber, factoryVoltage, factoryCapacity, disconnect, height }) {
   return (
@@ -120,37 +115,18 @@ function Indicators({ data, deviceCode, deviceNumber, factoryVoltage, factoryCap
             %
           </Text>
         </Text>
-{/*        <ImageBackground
+        <View
           style={{
-            width: '45%',
-            height: '80%',
             position: 'absolute',
-            top: '20%',
-            left: '67%'
-          }}
-          source={images.battery}
-        />*/}
-        <Text
-          style={{
-            display: 'flex',
-            justifyContent: 'flex-start',
-            alignItems: 'flex-start',
-            fontSize: 120,
-            fontWeight: '700',
-            color: '#366f6f',
-            position: 'absolute',
-            top: 10,
-            right: 30
+            top: 25,
+            right: 6
           }}
         >
-          C
-        </Text>
+          <Cell capacity={data.capacity} main={true} />
+        </View>
         <Text
           style={{
-            display: 'flex',
             height: 60,
-            justifyContent: 'flex-start',
-            alignItems: 'flex-start',
             fontSize: 48,
             fontWeight: '700',
             opacity: 0.6,
@@ -210,9 +186,6 @@ function Indicators({ data, deviceCode, deviceNumber, factoryVoltage, factoryCap
         </Text>
         <Text
           style={{
-            display: 'flex',
-            justifyContent: 'flex-start',
-            alignItems: 'flex-start',
             fontSize: 120,
             fontWeight: '700',
             color: '#366f6f',
@@ -378,9 +351,6 @@ function Indicators({ data, deviceCode, deviceNumber, factoryVoltage, factoryCap
         >
           <Text
             style={{
-              display: 'flex',
-              justifyContent: 'flex-start',
-              alignItems: 'flex-start',
               fontSize: 70,
               fontWeight: '700',
               color: '#366f6f',
@@ -479,9 +449,6 @@ function Indicators({ data, deviceCode, deviceNumber, factoryVoltage, factoryCap
           />
           <Text
             style={{
-              display: 'flex',
-              justifyContent: 'flex-start',
-              alignItems: 'flex-start',
               fontSize: 60,
               fontWeight: '700',
               color: '#366f6f',
@@ -508,18 +475,12 @@ function Indicators({ data, deviceCode, deviceNumber, factoryVoltage, factoryCap
               width: '100%',
               height: '100%',
               backgroundColor: '#0c1716',
-              borderTopLeftRadius: 10,
-              borderTopRightRadius: 10,
-              borderBottomRightRadius: 10,
-              borderBottomLeftRadius: 10,
+              borderRadius: 10,
               position: 'absolute'
             }}
           />
           <Text
             style={{
-              display: 'flex',
-              justifyContent: 'flex-start',
-              alignItems: 'flex-start',
               fontSize: 36,
               fontWeight: '700',
               color: '#30f5ef',
@@ -546,7 +507,7 @@ function Indicators({ data, deviceCode, deviceNumber, factoryVoltage, factoryCap
                 height: '100%',
                 position: 'absolute'
               }}
-              source={images.cycle}
+              source={require('../assets/images/cycle.png')}
             />
           </View>
         </View>
