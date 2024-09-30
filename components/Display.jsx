@@ -16,31 +16,8 @@ function Display(props) {
 
   if (!props.data) return <Empty />;
 
-  const renderMonitors = ({ item }) => {}
-
   return (
     <View>
-{/*      <View style={{ flex: 3 }}>
-        <FlatList
-          data={[0, 1]}
-          keyExtractor={(id) => id.toString()}
-          renderItem={renderMonitors}
-          horizontal
-          pagingEnabled
-          bounces={false}
-          onScroll={Animated.event([{
-            nativeEvent: {
-              contentOffset: {
-                x: scrollX
-              }
-            }
-          }], {
-            useNativeDriver: false
-          })}
-          scrollEventThrottle={32}
-          viewabilityConfig={viewConfig}
-        />
-      </View>*/}
       <Indicators {...props} />
     </View>
   );

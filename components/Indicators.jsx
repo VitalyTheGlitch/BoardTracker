@@ -4,7 +4,7 @@ import {
   ImageBackground,
   TouchableOpacity
 } from 'react-native';
-import Cell from './Cell';
+import Battery from './Battery';
 
 function Indicators({ data, deviceCode, deviceNumber, factoryVoltage, factoryCapacity, disconnect, height }) {
   return (
@@ -118,11 +118,11 @@ function Indicators({ data, deviceCode, deviceNumber, factoryVoltage, factoryCap
         <View
           style={{
             position: 'absolute',
-            top: 25,
-            right: 6
+            top: 30,
+            right: 9
           }}
         >
-          <Cell capacity={data.capacity} main={true} />
+          <Battery level={data.capacity} />
         </View>
         <Text
           style={{

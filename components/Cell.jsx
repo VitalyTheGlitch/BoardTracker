@@ -4,25 +4,14 @@ import {
   StyleSheet
 } from 'react-native';
 
-function Cell({ id, voltage, capacity, main }) {
+function Cell({ id, voltage }) {
   if (voltage < 2.5) voltage = 2.5;
 
   else if (voltage > 3.75) voltage = 3.75;
 
-  if (capacity < 0) capacity = 0;
-
-  else if (capacity > 100) capacity = 100;
-
-  let percentage;
-
-  if (main) percentage = capacity ?? 0;
-
-  else percentage = voltage ? ((voltage - 2.5) * 100) / 1.25 : 0;
-
-  const height = percentage + '%';
-  const scale = main ? 1 : 0.5;
-  const batteryStyle = [styles.battery, { transform: [{ scale }] }, id % 4 == 0 && { marginLeft: 50 }];
-  const chargeStyle = [styles.charge, { height }];
+  const percentage = voltage ? ((voltage - 2.5) * 100) / 1.25 : 0;
+  const batteryStyle = [styles.battery, { transform: [{ scale: 2 }] }, id % 4 == 0 && { marginLeft: 50 }];
+  const chargeStyle = [styles.charge, { height: percentage + '%' }];
   const colors = {
     high: '#c3feff',
     medium: '#c1a74e',
