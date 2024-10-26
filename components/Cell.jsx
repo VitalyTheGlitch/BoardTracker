@@ -10,13 +10,16 @@ function Cell({ id, voltage }) {
   else if (voltage > 3.75) voltage = 3.75;
 
   const percentage = voltage ? ((voltage - 2.5) * 100) / 1.25 : 0;
-  const batteryStyle = [styles.battery, { transform: [{ scale: 2 }] }, id % 4 == 0 && { marginLeft: 50 }];
   const chargeStyle = [styles.charge, { height: percentage + '%' }];
   const colors = {
-    high: '#c3feff',
+    full: '#c3feff',
+    high: '#4ec0c1',
     medium: '#c1a74e',
     low: '#c14e4e'
   }
+
+  const headColor = percentage >= 99 ? colors.full  : '#366f6f';
+  const headStyle = [styles.batteryHead, { borderColor: headColor }]
 
   let backgroundColor;
 
@@ -24,18 +27,19 @@ function Cell({ id, voltage }) {
 
   else if (percentage <= 50) backgroundColor = colors.medium;
 
-  else backgroundColor = colors.high;
+  else if (percentage < 99) backgroundColor = colors.high;
+
+  else backgroundColor = colors.full;
 
   chargeStyle.push({ backgroundColor });
 
   return (
-    <View style={batteryStyle}>
-      <View style={styles.batteryHead}>
+    <View style={styles.battery}>
+      <View style={[styles.batteryHead, headStyle]}>
         <View style={styles.batteryBody}>
-          <Text style={styles.text}>{voltage}</Text>
+          <Text style={styles.text}>{voltage}В</Text>
           <View style={chargeStyle} />
         </View>
-        <View style={styles.batteryBodyAfter} />
       </View>
     </View>
   );
@@ -43,59 +47,57 @@ function Cell({ id, voltage }) {
 
 const styles = StyleSheet.create({
   battery: {
-    flexDirection: 'row',
-    width: 70,
-    height: 120,
-    justifyContent: 'space-between',
-    marginVertical: 5,
-    marginHorizontal: 5
+    width: 35,
+    height: 60,
+    marginHorizontal: 5,
+    marginVertical: 10
   },
   batteryHead: {
-    width: 30,
-    height: 0,
-    backgroundColor: '#366f6f',
-    borderWidth: 4,
+    width: 15,
+    height: 5,
+    borderWidth: 2,
     borderStyle: 'solid',
-    borderColor: '#153535',
-    borderTopLeftRadius: 4,
-    borderTopRightRadius: 4,
+    borderTopLeftRadius: 1,
+    borderTopRightRadius: 1,
     alignItems: 'center'
   },
   batteryBody: {
     position: 'relative',
-    width: 70,
-    height: 120,
+    width: 35,
+    height: 60,
     backgroundColor: '#366f6f',
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderColor: '#153535',
-    borderRadius: 10,
+    borderRadius: 2,
     justifyContent: 'center',
     alignItems: 'center'
-  },
-  batteryBodyAfter: {
-    position: 'absolute',
-    top: '50%',
-    width: 70,
-    height: 120,
-    borderWidth: 1,
-    borderRadius: 10,
-    borderStyle: 'solid',
-    borderColor: '#153535'
   },
   charge: {
     position: 'absolute',
     bottom: 0,
     width: '100%',
     maxWidth: 'inherit',
-    borderRadius: 8
+    borderRadius: 2
   },
   text: {
     zIndex: 1,
-    fontSize: 20,
+    fontSize: 12,
     fontWeight: '500',
-    color: '#fff'
+    color: '#000'
   }
 });
 
 export default Cell;
+
+  // batteryBody: {
+  //   position: 'relative',
+  //   overflow: 'hidden',
+  //   top: 5,
+  //   width: 70,
+  //   height: 120,
+  //   backgroundColor: '#366f6f',
+  //   borderWidth: 1,
+  //   borderStyle: 'solid',
+  //   borderColor: '#153535',
+  //   borderRadius: 5,
+  //   justifyContent: 'center',
+  //   alignItems: 'center'
+  // }

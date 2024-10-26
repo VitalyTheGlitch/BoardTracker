@@ -6,11 +6,21 @@ import {
 } from 'react-native';
 import Battery from './Battery';
 
-function Indicators({ data, deviceCode, deviceNumber, factoryVoltage, factoryCapacity, disconnect, height }) {
+function Indicators({
+  data,
+  deviceCode,
+  deviceNumber,
+  factoryVoltage,
+  factoryCapacity,
+  disconnect,
+  width,
+  height
+}) {
   return (
     <View
       style={{
-        height: height,
+        width,
+        height,
         alignItems: 'center'
       }}
     >
@@ -28,7 +38,7 @@ function Indicators({ data, deviceCode, deviceNumber, factoryVoltage, factoryCap
             position: 'absolute',
             top: '50%',
             left: '50%',
-            transform: [{ translateY: -18 }, { translateX: -140 }]
+            transform: [{ translateY: -20 }, { translateX: -145 }]
           }}
         >
           <Text

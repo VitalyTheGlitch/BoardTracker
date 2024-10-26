@@ -160,6 +160,7 @@ function App() {
                 factoryVoltage={factoryVoltage}
                 factoryCapacity={factoryCapacity}
                 disconnect={disconnect}
+                width={windowWidth}
                 height={height}
               />
               <Toast visibilityTime={3000} />
