@@ -1,18 +1,12 @@
-import { useRef } from 'react';
-import {
-  View,
-  FlatList,
-  Animated,
-  useWindowDimensions
-} from 'react-native';
+import { View, FlatList } from 'react-native';
+import { useAuth } from '../context/AuthContext';
+import Login from './Login';
 import Indicators from './Indicators';
 import Cells from './Cells';
 import Empty from './Empty';
 
 function Display(props) {
-  const scrollX = useRef(new Animated.Value(0)).current;
-  const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
-  const width = useWindowDimensions().width;
+  const { authState } = useAuth();
 
   const renderMonitor = ({ item }) => {
     switch (item) {
@@ -22,7 +16,9 @@ function Display(props) {
         break;
 
       case 1:
-        return <Cells {...props} />;
+        if (authState.authenticated) return <Cells {...props} />;
+
+        return <Login width={props.width} height={props.height} />;
 
         break;
 

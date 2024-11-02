@@ -1,9 +1,4 @@
-import {
-  View,
-  Text,
-  ImageBackground,
-  TouchableOpacity
-} from 'react-native';
+import { View, Text, ImageBackground, TouchableOpacity } from 'react-native';
 import Battery from './Battery';
 
 function Indicators({

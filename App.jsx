@@ -7,12 +7,21 @@ import {
   Linking,
   useWindowDimensions
 } from 'react-native';
-import Toast from 'react-native-toast-message';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import useBLE from './useBLE';
+import Toast from 'react-native-toast-message';
 import Scanner from './components/Scanner';
 import Display from './components/Display';
 
 function App() {
+  return (
+    <AuthProvider>
+      <Layout />
+    </AuthProvider>
+  );
+}
+
+function Layout() {
   const {
     requestPermissions,
     scanDevices,
@@ -22,6 +31,8 @@ function App() {
     disconnectFromDevice: disconnectBLE,
     connectedDevice: connectedDeviceBLE
   } = useBLE();
+
+  const { authState } = useAuth();
 
   const [bluetoothPermissionsEnabled, setBluetoothPermissionsEnabled] = useState(false);
   const [connectedDeviceWAN, setConnectedDeviceWAN] = useState(null);
@@ -80,7 +91,7 @@ function App() {
   };
 
   const connectWAN = (device) => {
-    const url = 'https://battchain.ru/cgi-bin/bms/app.cgi?bid=' + device;
+    const url = 'https://battchain.ru/cgi-bin/bms/app.cgi?bid=' + device + '&email=' + authState.email;
     
     setConnectedDeviceWAN(device);
     setStreamURL(url);
@@ -136,55 +147,57 @@ function App() {
   const scale = (windowWidth <= 320) ? 0.9 : 1;
 
   return (
-    <ImageBackground
-      style={{
-        width: windowWidth,
-        height: windowHeight + 50,
-        position: 'absolute',
-        zIndex: -1
-      }}
-      source={require('./assets/images/bg.png')}
-      resizeMode='cover'
-    >
-      <ScrollView>
-        <SafeAreaView style={{
-          transform: [{ scale }],
-          marginTop: margin
-        }}>
-          {connectedDevice ? (
-            <>
-              <Display
-                data={data}
-                deviceCode={deviceCode}
-                deviceNumber={deviceNumber}
-                factoryVoltage={factoryVoltage}
-                factoryCapacity={factoryCapacity}
-                disconnect={disconnect}
-                width={windowWidth}
-                height={height}
+    <AuthProvider>
+      <ImageBackground
+        style={{
+          width: windowWidth,
+          height: windowHeight + 50,
+          position: 'absolute',
+          zIndex: -1
+        }}
+        source={require('./assets/images/bg.png')}
+        resizeMode='cover'
+      >
+        <ScrollView>
+          <SafeAreaView style={{
+            transform: [{ scale }],
+            marginTop: margin
+          }}>
+            {connectedDevice ? (
+              <>
+                <Display
+                  data={data}
+                  deviceCode={deviceCode}
+                  deviceNumber={deviceNumber}
+                  factoryVoltage={factoryVoltage}
+                  factoryCapacity={factoryCapacity}
+                  disconnect={disconnect}
+                  width={windowWidth}
+                  height={height}
+                />
+                <Toast visibilityTime={3000} />
+              </>
+            ) : (
+              <Scanner
+                bluetoothPermissionsEnabled={bluetoothPermissionsEnabled}
+                connected={!!connectedDevice}
+                devices={devices}
+                setMode={setMode}
+                connectionLink={connectionLink}
+                setConnectionLink={setConnectionLink}
+                setDeviceCode={setDeviceCode}
+                setBatteryNumber={setBatteryNumber}
+                setFactoryVoltage={setFactoryVoltage}
+                setFactoryCapacity={setFactoryCapacity}
+                connectBLE={connectBLE}
+                connectWAN={connectWAN}
+                height={windowHeight}
               />
-              <Toast visibilityTime={3000} />
-            </>
-          ) : (
-            <Scanner
-              bluetoothPermissionsEnabled={bluetoothPermissionsEnabled}
-              connected={!!connectedDevice}
-              devices={devices}
-              setMode={setMode}
-              connectionLink={connectionLink}
-              setConnectionLink={setConnectionLink}
-              setDeviceCode={setDeviceCode}
-              setBatteryNumber={setBatteryNumber}
-              setFactoryVoltage={setFactoryVoltage}
-              setFactoryCapacity={setFactoryCapacity}
-              connectBLE={connectBLE}
-              connectWAN={connectWAN}
-              height={windowHeight}
-            />
-          )}
-        </SafeAreaView>
-      </ScrollView>
-    </ImageBackground>
+            )}
+          </SafeAreaView>
+        </ScrollView>
+      </ImageBackground>
+    </AuthProvider>
   );
 }
 

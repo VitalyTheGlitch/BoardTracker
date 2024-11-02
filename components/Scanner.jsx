@@ -1,10 +1,5 @@
-import { useState, useCallback, useEffect } from 'react';
-import {
-  View,
-  Text,
-  ImageBackground,
-  TouchableOpacity
-} from 'react-native';
+import { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { CameraView, Camera } from 'expo-camera';
 import Empty from './Empty';

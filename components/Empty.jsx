@@ -1,35 +1,28 @@
-import {
-  View,
-  Text,
-  ActivityIndicator,
-  StyleSheet
-} from 'react-native';
+import { View, Text, ActivityIndicator } from 'react-native';
 
-function Empty({ permissions }) {
+function Empty({ width, permissions }) {
   return (
-    <View style={styles.container}>
+    <View style={{
+      flex: 1,
+      width,
+      height: 700,
+      justifyContent: 'center',
+      alignItems: 'center'
+    }}>
       {permissions ?
-        <Text style={styles.title}>Предоставьте приложению необходимые разрешения</Text> :
-        <ActivityIndicator size={300} color='#53bfbd' />
+        <Text style={{
+          color: '#53bfbd',
+          fontSize: 24,
+          fontWeight: 'bold',
+          textAlign: 'center',
+          marginHorizontal: 20
+        }}>
+          Предоставьте приложению необходимые разрешения
+        </Text>
+        : <ActivityIndicator size={300} color='#53bfbd' />
       }
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    height: 700,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  title: {
-    color: '#53bfbd',
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginHorizontal: 20
-  }
-});
 
 export default Empty;

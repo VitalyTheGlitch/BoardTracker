@@ -13,7 +13,10 @@
         "@config-plugins/react-native-ble-plx",
         {
           "isBackgroundEnabled": true,
-          "modes": ["peripheral", "central"],
+          "modes": [
+            "peripheral",
+            "central"
+          ],
           "bluetoothAlwaysPermission": "Allow $(PRODUCT_NAME) to connect to bluetooth devices"
         }
       ],
@@ -22,7 +25,8 @@
         {
           "cameraPermission": "Allow $(PRODUCT_NAME) to access camera"
         }
-      ]
+      ],
+      "expo-secure-store"
     ],
     "splash": {
       "image": "./assets/splash.png",
@@ -31,6 +35,9 @@
     },
     "ios": {
       "supportsTablet": true,
+      "config": {
+        "usesNonExemptEncryption": false
+      },
       "bundleIdentifier": "com.lionsystems",
       "buildNumber": "1.0.0"
     },

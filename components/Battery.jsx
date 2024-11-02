@@ -1,8 +1,4 @@
-import {
-  View,
-  Image,
-  StyleSheet
-} from 'react-native';
+import { View, Image, StyleSheet } from 'react-native';
 
 const charges = {
   normal: require('../assets/images/charge-normal.png'),

@@ -1,8 +1,4 @@
-import {
-  View,
-  Text,
-  StyleSheet
-} from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 
 function Cell({ id, voltage }) {
   if (voltage < 2.5) voltage = 2.5;
